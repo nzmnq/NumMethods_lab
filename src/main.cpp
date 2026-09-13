@@ -53,9 +53,8 @@ double calculateDet(const vector<vector<double>>& A){
             }
         }
         //зміна знаку головного елементу після перестановок
-        if ((w + h) % 2 != 0) {
-            det = -det;
-        }
+        if (h != k) det = -det;
+        if (w != k) det = -det;
 
         det = det * V[k][k];
 
@@ -75,13 +74,14 @@ double calculateDet(const vector<vector<double>>& A){
 int main(){
     SetConsoleOutputCP(CP_UTF8);
 
-    //double k = 8;
-    //double s = 0.02 * k;
+    double k = 8;
+    double s = 0.02 * k;
 
     vector<vector<double>> matrix = {
-        {2.0, 4.0, 1.0},
-        {-1.0, 1.0, 2.0},
-        {3.0, -2.0, -1.0}
+        {8.3, 2.62 + s, 4.1, 1.9},
+        {3.92, 8.45, 7.78 - s, 2.46},
+        {3.77, 7.21 + s, 8.04, 2.28},
+        {2.21, 3.65 - s, 1.69, 6.69}
     };
 
     cout << fixed << setprecision(4);
