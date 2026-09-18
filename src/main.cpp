@@ -23,7 +23,7 @@ double calculateDet(const vector<vector<double>>& A){
         int w = k;
         //рухаємось по л рядку по горизонталі
         for (int l = k; l < n; ++l) {
-            //рухаємось по к рядку по вертикалі
+            //рухаємось по ф рядку по вертикалі
             for (int f = k; f < n; ++f) {
                 if (max_value < abs(V[l][f])) {
                 max_value = abs(V[l][f]);
