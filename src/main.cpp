@@ -1,92 +1,46 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 #include <iomanip>
 #include <windows.h>
 
 using namespace std;
 
-double calculateDet(const vector<vector<double>>& A){
-    int n = A.size();
-    if (n == 0) return 0.0;
+//запишем нашу ф-цію
 
-    double det = 1.0;
-
-    // копіюєм матрицю для подальших розрахунків і змін
-    vector<vector<double>> V = A;
-
-    for (int k = 0; k < n; ++k) {
-        //шукаєм найбільший елемент в матриці як головний по всій підматриці
-        // k початковий елемент (0;0)
-        double max_value = abs(V[k][k]);
-        int h = k;
-        int w = k;
-        //рухаємось по л рядку по горизонталі
-        for (int l = k; l < n; ++l) {
-            //рухаємось по ф рядку по вертикалі
-            for (int f = k; f < n; ++f) {
-                if (max_value < abs(V[l][f])) {
-                max_value = abs(V[l][f]);
-                h = l;
-                w = f;
-                }
-            }
-        }
-        // переконуємось чи наша матриця не вироджена, детермінант не дорівнює нулю
-        if (max_value < 1e-12) { // < 0.000000000001
-            return 0.0;
-        }
-        // якшо максимальне число не знаходиться в верхній горизонталі
-        if (h != k){
-            for (int d = 0; d < n; ++d){
-                double value = V[k][d];
-                V[k][d] = V[h][d];
-                V[h][d] = value;
-            }
-        }    
-        // якшо максимальне число не знаходиться в лівій вертикалі
-        if (w != k){
-            for (int d = 0; d < n; ++d){
-                double value = V[d][k];
-                V[d][k] = V[d][w];
-                V[d][w] = value;
-            }
-        }
-        //зміна знаку головного елементу після перестановок
-        if (h != k) det = -det;
-        if (w != k) det = -det;
-
-        det = det * V[k][k];
-
-        // виключення елементів (прямий  хід)
-        for (int i = k + 1; i < n; ++i){
-            double C_n = V[i][k]/V[k][k]; //знаходимо множник
-            for (int j = k + 1; j < n; ++j){
-                V[i][j] = V[i][j] - V[k][j] * C_n;
-            }
-        }
-    }
-    return det;
-
-
+double f(double x){
+    return exp(x)+ x;
 }
-
 int main(){
-    SetConsoleOutputCP(CP_UTF8);
+SetConsoleOutputCP(CP_UTF8);
+// за умовою проміжок [-2 , 3], берем за х0 -1 а за х1 0
+double x_old = -1.0;
+double x = 1;
+double epsilon = 0.1; // відносна похибка
 
-    double k = 8;
-    double s = 0.02 * k;
+double x_older, fx_older, fx, error;
+int iter = 0;
 
-    vector<vector<double>> matrix = {
-        {8.3, 2.62 + s, 4.1, 1.9},
-        {3.92, 8.45, 7.78 - s, 2.46},
-        {3.77, 7.21 + s, 8.04, 2.28},
-        {2.21, 3.65 - s, 1.69, 6.69}
-    };
+do{
+    iter++;
+    x_older = x_old;
+    x_old = x;
 
-    cout << fixed << setprecision(4);
-    cout << "Визначник матриці: " << calculateDet(matrix) << endl;
+    //проганяєм через нашу ф-цію
+    fx_older = f(x_older);
+    fx = f(x_old);
 
-    return 0;
+    //ітер. формула методу січних
+    x = x_old - fx/((fx_older - fx)/(x_older - x_old));
 
+    error = abs((x-x_old)/x) * 100.0;
+
+    cout << "ітерація: " << iter << '\n';
+    cout << "x = " << setprecision(6) << x << '\n';
+    cout << "похибка: " << error << '\n';
+}while(error >= epsilon);
+
+cout << "кінцеве зн корення: " << x << '\n';
+cout << "f(x) мусить бути близьким до нуля: " << setprecision(3) << f(x);
+
+return 0;
 }
